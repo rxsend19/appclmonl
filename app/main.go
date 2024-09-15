@@ -96,7 +96,7 @@ func main() {
 					closer_d(db)
 					db.QueryRow("SELECT app FROM main ORDER BY id DESC LIMIT 1 ").Scan(&app)
 					if app != "Not-active" {
-						db.Exec("insert INTO main (app,start_time)  VALUES ($1,$2)  ", "Not-active", time.Now().String())
+						db.Exec("insert INTO main (app,start_time)   VALUES ($1,$2)  ", "Not-active", time.Now().String())
 					}
 				} else {
 					unactive_cycles++
