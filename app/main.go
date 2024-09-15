@@ -68,7 +68,7 @@ func main() {
 			// !! если предыдущая запись не равна нашей
 			db.QueryRow("SELECT app FROM main ORDER BY id DESC LIMIT 1 ").Scan(&app)
 			if app != foreground_app {
-				db.Exec("insert INTO main (app,end_time)  VALUES ($1,$2)  ", foreground_app, time.Now().String())
+				db.Exec("insert INTO main (app,start_time)  VALUES ($1,$2)  ", foreground_app, time.Now().String())
 				unactive_cycles = 0
 			}
 
