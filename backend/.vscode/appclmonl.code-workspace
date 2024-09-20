@@ -1,0 +1,142 @@
+{
+    // для Backend
+    "folders": [
+        {
+            "path": "../.."
+        }
+    ],
+    "settings": {
+        "files.exclude": { //ignore files ( or folders)
+            "**/.git*": true,
+            "**/frontend": true
+        },
+        "editor.formatOnSave": true,
+        "explorer.compactFolders": true,
+        //  Тема 
+        "themeswitcher.utcOffset": 5,
+        "themeswitcher.mappings": [
+            {
+                "time": "06:10", // запуск темы с 06:10 до запуска новой темы 
+                "theme": "Visual Studio Dark"
+            },
+            {
+                "time": "17:00",
+                "theme": "Default Dark Modern"
+            },
+        ],
+        "workbench.editor.showTabs": "multiple",
+        //  Контекст меню  ( lang:Golang ) 
+        "go.editorContextMenuCommands": {
+            "debugTestAtCursor": false,
+            "playground": false,
+            "toggleTestFile": false,
+            "addTags": false,
+            "testAtCursor": false,
+            "generateTestForFunction": false,
+            "addImport": false,
+            "testCoverage": false,
+            "removeTags": false,
+            "fillStruct": false,
+            "testFile": false,
+            "testPackage": false,
+            "generateTestForFile": false,
+            "generateTestForPackage": false,
+            "benchmarkAtCursor": false
+        },
+        "go.lintTool": "staticcheck",
+        // 
+        "cSpell.language": "en,ru,ru-RU",
+        "cSpell.ignoreWords": [
+            "appclmonl",
+            "caldav",
+            "foregroundapp",
+            "unmov"
+        ],
+        //
+        "workbench.colorCustomizations": {
+            "editorIndentGuide.activeBackground1": "#00ff0d"
+        },
+    },
+    "extensions": {
+        "recommendations": [
+            "usernamehw.errorlens",
+            "hediet.vscode-drawio",
+            "savioserra.theme-switcher",
+            "mhutchie.git-graph",
+            "streetsidesoftware.code-spell-checker",
+            "streetsidesoftware.code-spell-checker-russian",
+            "qwtel.sqlite-viewer",
+            "rangav.vscode-thunder-client",
+            "golang.go",
+            "ms-vscode.powershell",
+        ]
+    },
+    "launch": {
+        "version": "0.2.0",
+        "configurations": [
+            {
+                "name": "Launch Package",
+                "type": "go",
+                "request": "launch",
+                "mode": "auto",
+                "program": "${workspaceFolder}/app/main.go",
+                "env": {
+                    "CGO_ENABLED": "1"
+                },
+                "console": "integratedTerminal"
+            },
+            {
+                "name": "build and run",
+                "type": "PowerShell",
+                "request": "launch",
+                "script": "${workspaceFolder}\\.vscode\\run_build.ps1",
+                "cwd": "${workspaceFolder}",
+            }
+        ]
+    },
+    "tasks": {
+        "version": "2.0.0",
+        "tasks": [
+            {
+                "label": "INSTALL extensions recommendations automaticly ",
+                "type": "shell",
+                "windows": {
+                    "command": "$all_ext = (code --list-extensions ); $config_ext = ((Get-Content  -Raw .vscode/*.code-workspace) -replace '\\/\\/.*\\n' -replace '\\n' -replace '\\s' -replace '\\/\\*[^.](.|\\n)*?\\*\\/' -replace ',}', '}' -replace ',]', ']' | ConvertFrom-Json).extensions.recommendations; $problem_arr = @(); foreach ($ext in $config_ext) { if ($all_ext | Where-Object { $ext -match $_ }) { Write-Host 'Already-installed:$ext'; } else { Write-Host 'Install:$ext'; code --install-extension $ext; } }; $all_ext = (code --list-extensions ); foreach ($ext in  $all_ext) { if ($config_ext | Where-Object { $ext -match $_ }) { Write-Host 'exists in config:$ext'; } else { Write-Host 'delete:$ext'; $result = @(code  --uninstall-extension $ext 2>&1); if ('Cannot' | Where-Object { $result -match $_ }) { $problem_arr += $ext; } } }; foreach ($ext in  $problem_arr) { Write-Host 'Re-delete:$ext'; code  --uninstall-extension $ext; }"
+                },
+                "linux": { // нужно чекать и менять 
+                    "command": "cat .vscode/extensions.json | jq .recommendations[] | xargs -n 1 code . --install-extension"
+                },
+                "runOptions": {
+                    "runOn": "folderOpen"
+                },
+                "presentation": {
+                    "reveal": "silent",
+                }
+            }
+        ]
+    }
+}
+//# Control + i => show hower hint
+//"workbench.colorTheme": "Default Dark Modern",
+// drawio map => file:name.drawio
+//             "ms-vscode.hexeditor", Hex-editor build-in  ( мб добавить если понадобится в вообще )
+/*golang struture   (https://go.dev/doc/modules/layout) && (https://gist.github.com/ayoubzulfiqar/9f1a34049332711fddd4d4b2bfd46096) 
+&& (https://github.com/golang-standards/project-layout/blob/master/README_ru.md) 
+ 
+основа app  (в этой папке все приложение)  ( сделано чтобы при упаковке контейнера не включать в себя migrations) 
+app=>
+    go.mod
+    go.sum
+    cmd=>
+        app_name=>
+            main.go
+    internal=>
+        app=>
+            app.go (Logic of APP)
+        other_modules
+migrations=>
+    databases  
+other_config_files (ex docker, or env )
+
+
+*/
