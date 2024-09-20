@@ -1,14 +1,12 @@
 {
-    // frontend
     "folders": [
         {
-            "path": "../.." // убрать app
+            "path": ".." // убрать app
         }
     ],
     "settings": {
         "files.exclude": { //ignore files ( or folders)
             "**/.git": true,
-            "**/backend": true
         },
         "editor.formatOnSave": true,
         "explorer.compactFolders": true,
